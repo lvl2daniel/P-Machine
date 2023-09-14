@@ -11,20 +11,24 @@ typedef struct instruction{
     int m; // modifier which tells the offset of the variable
     }instruction;
 
-void readFile(int inputs[][3]);
-void execute();
+void readFile(instruction inputs[], const char *argv);
+void execute(instruction inputs[]);
+int base(int *stack, int l, int bp);
 
 
 
 
-int main(){
+int main(int argc, char **argv){
 
     //initialize variables
-    int inputs[ARRAY_SIZE][3];
-    readFile(inputs);
-    printf("Hello World\n");
+    instruction inputs[ARRAY_SIZE];
+    // printf("%s", argv[1]);
+    const char* fileName = argv[1];
+    // printf("%s", fileName);
+    readFile(inputs, fileName);
+    // printf("Hello World\n");
     execute(inputs);
-    printf("goodbye world\n");
+    // printf("goodbye world\n");
 
 
     return 0;
@@ -168,24 +172,22 @@ int base(int *stack, int l, int bp){
     return arb;
 }
 
-void readFile(int inputs[][3]){
-
-    //read input file
-
-    //THIS IS BROKEN ... D:
-
+void readFile(instruction inputs[], const char *argv) {
     int i = 0;
-    FILE *fp = fopen("input.txt", "r");
-    printf("hello file\n");
-    //read file into array
-    while(!feof(fp)){
+    FILE *fp = fopen(argv, "r");
+    if (fp == NULL) {
+        perror("Error opening input file");
+        exit(1);
+    }
 
-        printf("%d, %d, %d, %d,\n", inputs[i][0], inputs[i][1], inputs[i][2], i);
-        fscanf(fp, "%d %d %d", &inputs[i][0], &inputs[i][1], &inputs[i][2]);
+    // printf("Check 1\n");
+    // Read instructions from the file into the instruction array
+    while (fscanf(fp, "%d %d %d", &inputs[i].opcode, &inputs[i].l, &inputs[i].m) == 3) {
+        // printf("check 2.%d ", i);
+        printf("%d %d %d\n", inputs[i].opcode, inputs[i].l, inputs[i].m);
         i++;
-        if(inputs[i][0] == 9 && inputs[i][3] == 3) break;
     }
 
     fclose(fp);
-    return;
 }
+
