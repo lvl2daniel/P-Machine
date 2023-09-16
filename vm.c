@@ -11,8 +11,8 @@ typedef struct instruction{
     int m; // modifier which tells the offset of the variable
     }instruction;
 
-void readFile(int inputs[ARRAY_SIZE], const char *argv);
-void execute(int inputs[ARRAY_SIZE]);
+int readFile(int inputs[ARRAY_SIZE], const char *argv);
+void execute(int inputs[ARRAY_SIZE], int count);
 int base(int *stack, int l, int bp);
 
 
@@ -21,26 +21,27 @@ int base(int *stack, int l, int bp);
 int main(int argc, char **argv){
 
     //initialize variables
-    int inputs[ARRAY_SIZE];
+    int inputs[ARRAY_SIZE] = {0};
+    int count;
     // printf("%s", argv[1]);
     const char* fileName = argv[1];
     // printf("%s", fileName);
-    readFile(inputs, fileName);
+    count = readFile(inputs, fileName);
     // printf("Hello World\n");
-    execute(inputs);
+    execute(inputs, count);
     // printf("goodbye world\n");
 
 
     return 0;
 }
 
-void execute(int inputs[]){
+void execute(int inputs[], int count){
         int pc = 0; //program counter
-        int bp = 0; //base pointer
-        int sp = -1; //stack pointer
+        int bp = count; //base pointer
+        int sp = count - 1; //stack pointer
         instruction ir; //instruction register
         int halt = 0; //halt flag
-        int stack[ ARRAY_SIZE ]; //stack
+        int stack[ ARRAY_SIZE ] = {0}; //stack
         printf("\t\t\tPC\t BP\t SP\t stack\n");
         printf("Initial Values:\t\t%d\t %d\t %d\t\n", pc, bp, sp);
         while(!halt){
@@ -191,42 +192,42 @@ void execute(int inputs[]){
                     printf("\n");
                     break;
                 case 4: //STO
-                    printf("STO\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
                     stack[base(stack,ir.l, bp) + ir.m] = stack[sp];
                     sp--;
+                    printf("STO\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
                     for(int i = 0; i <= sp; i++){
                         printf("%d ", stack[i]);
                     }
                     printf("\n");
                     break;
                 case 5: //CAL
-                    printf("CAL\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
                     stack[sp+1] = base(stack, ir.l, bp);
                     stack[sp+2] = bp;
                     stack[sp+3] = pc;
                     bp = sp + 1;
                     pc = ir.m;
+                    printf("CAL\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
                     printf("\n");
                     break;
                 case 6: //INC
-                    printf("INC\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
                     sp += ir.m;
+                    printf("INC\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
                     for(int i = 0; i <= sp; i++){
                         printf("%d ", stack[i]);
                     }
                     printf("\n");
                     break;
                 case 7: //JMP
-                    printf("JMP\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
                     pc = ir.m;
+                    printf("JMP\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
                     printf("\n");
                     break;
                 case 8: //JPC
-                    printf("JPC\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
                     if(stack[sp] == 0){
                         pc = ir.m;
                     }
                     sp--;
+                    printf("JPC\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
                     for(int i = 0; i <= sp; i++){
                         printf("%d ", stack[i]);
                     }
@@ -237,8 +238,8 @@ void execute(int inputs[]){
                         case 1:
                             //write
                             printf("The output result is: %d\n", stack[sp]);
-                            printf("SYS\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
                             sp--;
+                            printf("SYS\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
                             printf("\n");
                             break;
                         case 2:
@@ -274,8 +275,8 @@ int base(int *stack, int l, int bp){
     return arb;
 }
 
-void readFile(int inputs[ARRAY_SIZE], const char *argv) {
-    int i = 0;
+int readFile(int inputs[ARRAY_SIZE], const char *argv) {
+    int count = 0;
     if(argv == NULL)
         argv = "input.txt";
     FILE *fp = fopen(argv, "r");
@@ -286,10 +287,11 @@ void readFile(int inputs[ARRAY_SIZE], const char *argv) {
 
     // printf("Check 1\n");
     // Read instructions from the file into the input array
-    while(fscanf(fp, "%d", &inputs[i]) != EOF) {
-        i++;
+    while(fscanf(fp, "%d", &inputs[count]) != EOF) {
+        count++;
     }
 
     fclose(fp);
+    return count;
 }
 
