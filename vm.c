@@ -68,7 +68,7 @@ void execute(int inputs[], int count){
                     stack[sp] = ir.m;
                     printf("LIT\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
                     //print the stack
-                    for(int i = 0; i <= sp; i++){
+                    for(int i = count; i <= sp; i++){
                         printf("%d ", stack[i]);
                         if(i+1 == bp){
                             printf("| ");
@@ -94,7 +94,7 @@ void execute(int inputs[], int count){
                             //ADD
                             stack[sp] += stack[sp+1];
                             printf("ADD\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
-                            for(int i = 0; i <= sp; i++){
+                            for(int i = count; i <= sp; i++){
                                 printf("%d ", stack[i]);
                             }
                             printf("\n");
@@ -103,7 +103,7 @@ void execute(int inputs[], int count){
                             //SUB
                             stack[sp] -= stack[sp+1];
                             printf("SUB\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
-                            for(int i = 0; i <= sp; i++){
+                            for(int i = count; i <= sp; i++){
                                 printf("%d ", stack[i]);
                             }
                             printf("\n");
@@ -112,8 +112,10 @@ void execute(int inputs[], int count){
                             //MUL
                             stack[sp] *= stack[sp+1];
                             printf("MUL\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
-                            for(int i = 0; i <= sp; i++){
-                                printf("%d ", stack[i]);
+                            for(int i = count; i <= sp; i++){
+                                printf("%d ", stack[i]);if(i+1 == bp){
+                                    printf("| ");
+                                }
                             }
                             printf("\n");
                             break;
@@ -121,7 +123,7 @@ void execute(int inputs[], int count){
                             //DIV
                             stack[sp] /= stack[sp+1];
                             printf("DIV\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
-                            for(int i = 0; i <= sp; i++){
+                            for(int i = count; i <= sp; i++){
                                 printf("%d ", stack[i]);
                             }
                             printf("\n");
@@ -130,7 +132,7 @@ void execute(int inputs[], int count){
                             //EQL
                             stack[sp] = stack[sp] == stack[sp+1];
                             printf("EQL\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
-                            for(int i = 0; i <= sp; i++){
+                            for(int i = count; i <= sp; i++){
                                 printf("%d ", stack[i]);
                             }
                             printf("\n");
@@ -139,7 +141,7 @@ void execute(int inputs[], int count){
                             //NEQ
                             stack[sp] = stack[sp] != stack[sp+1];
                             printf("NEQ\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
-                            for(int i = 0; i <= sp; i++){
+                            for(int i = count; i <= sp; i++){
                                 printf("%d ", stack[i]);
                             }
                             printf("\n");
@@ -148,8 +150,11 @@ void execute(int inputs[], int count){
                             //LSS
                             stack[sp] = stack[sp] < stack[sp+1];
                             printf("LSS\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
-                            for(int i = 0; i <= sp; i++){
+                            for(int i = count; i <= sp; i++){
                                 printf("%d ", stack[i]);
+                                if(i+1 == bp){
+                                    printf("| ");
+                                }
                             }
                             printf("\n");
                             break;
@@ -157,7 +162,7 @@ void execute(int inputs[], int count){
                             //LEQ
                             stack[sp] = stack[sp] <= stack[sp+1];
                             printf("LEQ\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
-                            for(int i = 0; i <= sp; i++){
+                            for(int i = count; i <= sp; i++){
                                 printf("%d ", stack[i]);
                             }
                             printf("\n");
@@ -166,7 +171,7 @@ void execute(int inputs[], int count){
                             //GTR
                             stack[sp] = stack[sp] > stack[sp+1];
                             printf("GTR\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
-                            for(int i = 0; i <= sp; i++){
+                            for(int i = count; i <= sp; i++){
                                 printf("%d ", stack[i]);
                             }
                             printf("\n");
@@ -175,7 +180,7 @@ void execute(int inputs[], int count){
                             //GEQ
                             stack[sp] = stack[sp] >= stack[sp+1];
                             printf("GEQ\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
-                            for(int i = 0; i <= sp; i++){
+                            for(int i = count; i <= sp; i++){
                                 printf("%d ", stack[i]);
                             }
                             printf("\n");
@@ -186,7 +191,7 @@ void execute(int inputs[], int count){
                     printf("LOD\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
                     sp++;
                     stack[sp] = stack[base(stack,ir.l, bp) + ir.m];
-                    for(int i = 0; i <= sp; i++){
+                    for(int i = count; i <= sp; i++){
                         printf("%d ", stack[i]);
                         if(i+1 == bp){
                             printf("| ");
@@ -198,7 +203,7 @@ void execute(int inputs[], int count){
                     stack[base(stack,ir.l, bp) + ir.m] = stack[sp];
                     sp--;
                     printf("STO\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
-                    for(int i = 0; i <= sp; i++){
+                    for(int i = count; i <= sp; i++){
                         printf("%d ", stack[i]);
                         if(i+1 == bp){
                             printf("| ");
@@ -213,12 +218,15 @@ void execute(int inputs[], int count){
                     bp = sp + 1;
                     pc = ir.m;
                     printf("CAL\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
+                    for(int i = count; i <= sp; i++){
+                        printf("%d ", stack[i]);
+                    }
                     printf("\n");
                     break;
                 case 6: //INC
                     sp += ir.m;
                     printf("INC\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
-                    for(int i = 0; i <= sp; i++){
+                    for(int i = count; i <= sp; i++){
                         printf("%d ", stack[i]);
                         if(i+1 == bp){
                             printf("| ");
@@ -237,7 +245,7 @@ void execute(int inputs[], int count){
                     }
                     sp--;
                     printf("JPC\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
-                    for(int i = 0; i <= sp; i++){
+                    for(int i = count; i <= sp; i++){
                         printf("%d ", stack[i]);
                         if(i+1 == bp){
                             printf("| ");
@@ -263,6 +271,9 @@ void execute(int inputs[], int count){
                             printf("Please enter an integer: ");
                             scanf("%d", &stack[sp]);
                             printf("SYS\t %d\t %d\t %d\t%d\t%d\t", ir.l, ir.m, pc, bp, sp);
+                            for(int i = bp; i <= sp; i++){
+                                printf("%d ", stack[i]);
+                            }
                             printf("\n");
                             break;
                         case 3:
